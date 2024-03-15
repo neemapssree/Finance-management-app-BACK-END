@@ -11,15 +11,17 @@ var app = express();
 //database
 connectDb();
 
-var indexRouter = require('./routes/index');
-var usersRouter = require('./routes/userRouter');
-var transactionRouter = require('./routes/transactionRouter');
-
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
 
 app.use(cors());
+
+var indexRouter = require('./routes/index');
+var usersRouter = require('./routes/userRouter');
+var transactionRouter = require('./routes/transactionRouter');
+
+
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));

@@ -21,7 +21,6 @@ var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/userRouter');
 var transactionRouter = require('./routes/transactionRouter');
 
-
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));

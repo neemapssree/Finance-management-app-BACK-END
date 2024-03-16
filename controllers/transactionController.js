@@ -30,57 +30,58 @@ const addTransaction = async (req,res) => {
 
 }
 
-const getAllTransaction = async (req,res) => {
-    const authHeader = req.headers.authorization;    
-    if(!authHeader){
-        return res.status(401).json({message:'Authorization header is missing'});
+const getAllTransaction = async (req, res) => {
+    const authHeader = req.headers.authorization;
+    if (!authHeader) {
+        return res.status(401).json({ message: 'Authorization header is missing' });
     }
     const userID = req.body.userid;
     const frequency = req.body.frequency;
     const selcategory = req.body.selCategory;
-    try{ 
+    try {
         let dateFilter;
         const currentDate = new Date();
-        currentDate.setUTCHours(0,0,0,0);
+        currentDate.setUTCHours(0, 0, 0, 0);
 
-        if (frequency === "custom") {            
+        if (frequency === "custom") {
             const customStartDate = req.body.selectedDate[0].startDate;
             const customEndDate = req.body.selectedDate[0].endDate;
-            console.log(customStartDate,"start date");
-            console.log(customEndDate,"end date");
+            console.log(customStartDate, "start date");
+            console.log(customEndDate, "end date");
             const selectedStartDate = new Date(customStartDate);
             const selectedEndDate = new Date(customEndDate);
             selectedStartDate.setDate(selectedStartDate.getDate() + 1);
             selectedEndDate.setDate(selectedEndDate.getDate() + 1);
             dateFilter = { $gte: selectedStartDate, $lte: selectedEndDate };
-        } else if(frequency && frequency !== "custom") {
+        } else if (frequency && frequency !== "custom") {
             dateFilter = {
-                $gte: new Date(currentDate.getTime() - ((Number(frequency) -1 ) * 24 * 60 * 60 * 1000)),
+                $gte: new Date(currentDate.getTime() - ((Number(frequency) - 1) * 24 * 60 * 60 * 1000)),
                 $lte: currentDate
             };
             console.log("date:", dateFilter);
-            console.log("filt date:", frequency);             
+            console.log("filt date:", frequency);
         }
         const query = { addedBy: userID };
-        if(dateFilter){
+        if (dateFilter) {
             query.date = {
                 $gte: dateFilter.$gte.toISOString().split('T')[0], // Extract date part and convert to ISO string
                 $lte: dateFilter.$lte.toISOString().split('T')[0] // Extract date part and convert to ISO string
             };
         }
-        if(selcategory !== ''){
-            query.category = {
-                $elemMatch: { category: selcategory }
-            };
+        if (selcategory !== '') {
+            // Correcting the category query
+            query.category = selcategory;
         }
         const result = await TRANSACTION_MODEL.find(query);
 
         res.status(200).json(result);
-    }catch(error){
+    } catch (error) {
         res.status(500).json(error);
     }
 
 }
+
+
 
 const updateTransaction = async (req,res) => {    
     const authHeader = req.headers.authorization;

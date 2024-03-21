@@ -26,7 +26,7 @@ const addTransaction = async (req,res) => {
     }catch(err){
         console.log(err);
         res.status(200).json({message:'couldn\'t add new transaction'});
-    }
+    } 
 
 }
 
@@ -38,10 +38,12 @@ const getAllTransaction = async (req, res) => {
     const userID = req.body.userid;
     const frequency = req.body.frequency;
     const selcategory = req.body.selCategory;
+    const selType = req.body.filterType;
     try {
         let dateFilter;
         const currentDate = new Date();
         currentDate.setUTCHours(0, 0, 0, 0);
+        console.log("filt type:", selType);
 
         if (frequency === "custom") {
             const customStartDate = req.body.selectedDate[0].startDate;
@@ -71,7 +73,12 @@ const getAllTransaction = async (req, res) => {
         if (selcategory !== '') {
             // Correcting the category query
             query.category = selcategory;
+            console.log("filt type:", selType);
         }
+        if (selType !== '') {
+            query.type = selType;
+        }
+        
         const result = await TRANSACTION_MODEL.find(query);
 
         res.status(200).json(result);

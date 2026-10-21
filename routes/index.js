@@ -3,7 +3,10 @@ var router = express.Router();
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
-  res.render('index', { title: 'Express' });
+  res.json({ 
+    status: "success", 
+    message: "Finance Management Backend API is online and running smoothly!" 
+  });
 });
 
 module.exports = router;

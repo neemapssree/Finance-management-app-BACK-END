@@ -1,31 +1,26 @@
 const mongoose = require('mongoose');
 
-// Cache connection state across serverless instances
+// Cache the active connection status across hot serverless instances
 let isConnected = false;
 
 const connectDb = async () => {
-  // 1. Safety guard check
   if (!process.env.MONGO_URL) {
-    console.error("❌ Critical Error: MONGO_URL environment variable is missing.");
+    console.error("❌ Critical: MONGO_URL variable is missing from environmental settings.");
     return;
   }
 
-  // 2. Reuse connection if database instance is already hot
   if (isConnected) {
-    console.log("🔄 Reusing active serverless MongoDB connection instance");
+    console.log("🔄 Reusing existing hot database connection proxy");
     return;
   }
 
   try {
-    const db = await mongoose.connect(process.env.MONGO_URL, {
-      useNewUrlParser: true,
-      useUnifiedTopology: true
-    });
-    
+    // Clean modern configuration (No deprecated options allowed)
+    const db = await mongoose.connect(process.env.MONGO_URL);
     isConnected = db.connections[0].readyState;
     console.log("✅ MongoDB serverless pipeline initialized successfully");
   } catch (error) {
-    console.error("❌ Database connectivity exception caught at runtime:", error.message);
+    console.error("❌ Database connection error caught at runtime:", error.message);
   }
 };
 

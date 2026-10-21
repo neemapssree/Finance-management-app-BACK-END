@@ -15,7 +15,6 @@ const connectDb = async () => {
   }
 
   try {
-    // Clean modern configuration (No deprecated options allowed)
     const db = await mongoose.connect(process.env.MONGO_URL);
     isConnected = db.connections[0].readyState;
     console.log("✅ MongoDB serverless pipeline initialized successfully");

@@ -13,7 +13,7 @@ connectDb();
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
-app.set('view engine', 'jade');
+app.set('view engine', 'pug');
 
 app.use(cors());
 
@@ -50,5 +50,3 @@ app.use(function(err, req, res, next) {
 // const port = process.env.PORT || '5000';                  //port number in bin>www
 
 module.exports = app;
-
-
